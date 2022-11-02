@@ -1,5 +1,16 @@
 This repo allows you to run the `ccn-coverage` project in `docker compose`.
 
+## Prerequisites
+
+You have checked out `ccn-coverage`-related git repos as follows:
+
+```
+foo/
+├── ccn-coverage-api/
+├── ccn-coverage-vis/
+├── ccn-coverage-docker/ (this repo)
+```
+
 All commands below must be executed while you have `cd`'d to this directory.
 
 ## Setting up for the first time
@@ -22,7 +33,7 @@ docker compose up -d
 docker compose logs -f api
 docker compose logs -f vis
 
-# Open the app on your browser.
+# Open the app on your browser at this address.
 curl localhost:8000
 
 # When done
