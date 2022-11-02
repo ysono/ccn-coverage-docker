@@ -1,0 +1,15 @@
+# A docker compose configuration that is applicable to "dev" build type only.
+
+services:
+  vis:
+    build:
+      context: ../ccn-coverage-vis
+      target: dev-stage
+      tags: ['scn/ccn-coverage-vis:dev']
+    volumes:
+      - ../ccn-coverage-vis:/code
+      - vis-node_modules:/code/node_modules
+    command: ['npm', 'start']
+
+volumes:
+  vis-node_modules:

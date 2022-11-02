@@ -1,0 +1,6 @@
+upstream api {
+    server api:3000;
+}
+upstream vis {
+    server vis:${CCN_VIS_PORT};
+}

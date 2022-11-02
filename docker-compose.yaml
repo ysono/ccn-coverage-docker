@@ -1,0 +1,35 @@
+# A docker compose configuration that is common to all ways of running ccn-coverage.
+
+name: ccn-coverage
+
+services:
+  mongo:
+    image: mongo:6.0.2
+    volumes:
+      - mongo-data-db:/data/db
+      - mongo-data-configdb:/data/configdb
+
+  api:
+    build:
+      context: ../ccn-coverage-api
+      target: dev-stage
+      tags: ['scn/ccn-coverage-api:dev']
+    volumes:
+      - ../ccn-coverage-api:/code
+      - api-node_modules:/code/node_modules
+    command: ['npm', 'start']
+
+  nginx:
+    image: nginx:1.23.2
+    volumes:
+      - ./nginx-confs/conf.d:/etc/nginx/conf.d
+      - ./nginx-confs/templates:/etc/nginx/templates
+    environment:
+      CCN_VIS_PORT: 3002
+    ports: ['8000:80']
+
+volumes:
+  mongo-data-db:
+  mongo-data-configdb:
+
+  api-node_modules:

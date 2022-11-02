@@ -1,0 +1,14 @@
+# A docker compose configuration that is applicable to "release" build type only.
+
+services:
+  # There is currently not a distinct release version of `ccn-coverage-api`.
+
+  vis:
+    build:
+      context: ../ccn-coverage-vis
+      target: release-stage
+      tags: ['scn/ccn-coverage-vis:release']
+
+  nginx:
+    environment:
+      CCN_VIS_PORT: 80
