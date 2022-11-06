@@ -1,0 +1,31 @@
+---
+- hosts: webapp-dev.scn
+  tasks:
+    - name: Install apt packages
+      become: yes
+      ansible.builtin.apt:
+        update_cache: yes
+        name:
+          - git
+          - mongodb-server=1:3.6.9+really3.6.8+90~g8e540c0b6d-0ubuntu5.3
+          - nginx=1.18.0-0ubuntu1.3
+
+    - name: Install ccn-coverage-api
+      ansible.builtin.git:
+        repo: https://github.com/Local-Connectivity-Lab/ccn-coverage-api.git
+        version: master
+        # force: yes
+        dest: ~/Code/ccn-coverage-api
+
+    - name: Install ccn-coverage-vis
+      ansible.builtin.git:
+        repo: https://github.com/Local-Connectivity-Lab/ccn-coverage-vis.git
+        version: main
+        # force: yes
+        dest: ~/Code/ccn-coverage-vis
+
+    - name: Install nginx conf
+      become: yes
+      ansible.builtin.copy:
+        src: ../../nginx-confs/sites-available/default
+        dest: /etc/nginx/sites-available/default

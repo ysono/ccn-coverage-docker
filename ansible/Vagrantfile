@@ -1,0 +1,33 @@
+Vagrant.configure("2") do |config|
+    config.vm.box = "bento/ubuntu-20.04"
+
+    config.vm.provider "virtualbox" do |vb|
+        vb.memory = "2048"
+        vb.cpus = "1"
+    end
+
+    config.vm.network "forwarded_port", guest: 80, host: 8888
+
+    # Create a user `othello`.
+    config.vm.provision "shell", inline: <<-SHELL
+        id -u othello > /dev/null
+        if [[ "$?" != "0" ]]; then
+            sudo adduser --disabled-password --gecos othello othello
+            sudo passwd -d othello
+            sudo usermod -aG sudo othello
+        fi
+
+        mkdir -p /home/othello/.ssh/
+        chown othello:othello /home/othello/.ssh/
+    SHELL
+    # Add host's ssh public keys as othello's authorized_keys.
+    Dir.glob("#{ENV['HOME']}/.ssh/*.pub").each do |path|
+        config.vm.provision "file", source: path, destination: "/home/vagrant/.ssh/#{File.basename(path)}.temp"
+    end
+    config.vm.provision "shell", inline: <<-SHELL
+        cat /home/vagrant/.ssh/*.pub.temp > /home/othello/.ssh/authorized_keys
+        chown othello:othello /home/othello/.ssh/authorized_keys
+        chmod 644 /home/othello/.ssh/authorized_keys
+        rm /home/vagrant/.ssh/*.pub.temp
+    SHELL
+end

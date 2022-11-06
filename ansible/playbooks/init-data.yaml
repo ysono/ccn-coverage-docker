@@ -1,0 +1,9 @@
+---
+- hosts: local-vagrant-vm
+  tasks:
+    - name: Mongo - Copy mock data
+      ansible.builtin.copy:
+        src: ../mongo-data-mock/
+        dest: ~/Data/mongo-data-mock/
+    - name: Mongo - Dump mock data
+      ansible.builtin.shell: ~/Data/mongo-data-mock/initialize.sh

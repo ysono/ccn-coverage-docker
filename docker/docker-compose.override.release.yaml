@@ -1,16 +1,18 @@
 # A docker compose configuration for running "release" builds.
-# To be used as `-f docker-compose.yaml -f docker-compose.override.release.yaml`. You must specify this sequence of config files to your `docker compose ...` commands.
+# To be selected as `-f docker-compose.yaml -f docker-compose.override.release.yaml`. You must manually specify this sequence of config yamls to your `docker compose ...` commands.
 
 services:
   api:
     build:
-      context: ../ccn-coverage-api
+      context: ../../ccn-coverage-api
       target: release-stage
       tags: ['local-connectivity-lab/ccn-coverage-api:release']
+    environment:
+      NODE_ENV: "development"
 
   vis:
     build:
-      context: ../ccn-coverage-vis
+      context: ../../ccn-coverage-vis
       target: release-stage
       tags: ['local-connectivity-lab/ccn-coverage-vis:release']
 

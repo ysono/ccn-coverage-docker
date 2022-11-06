@@ -1,0 +1,30 @@
+---
+- hosts: webapp-dev.scn
+  tasks:
+    - name: Start mongo server
+      become: yes
+      ansible.builtin.systemd:
+        name: mongodb
+        state: started
+
+    - name: Run ccn-coverage-api
+      ansible.builtin.shell:
+        chdir: ~/Code/ccn-coverage-api
+        cmd: |
+          # . $HOME/.nvm/nvm.sh && \
+          npm install && \
+          npm start
+
+    - name: Build ccn-coverage-vis
+      ansible.builtin.shell:
+        chdir: ~/Code/ccn-coverage-vis
+        cmd: |
+          . $HOME/.nvm/nvm.sh && \
+          npm install && \
+          npm build
+
+    - name: Start nginx server
+      become: yes
+      ansible.builtin.systemd:
+        name: nginx
+        state: started

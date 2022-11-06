@@ -1,4 +1,4 @@
-This repo allows you to run the `ccn-coverage` project in `docker compose`.
+This repo enables you to run the `ccn-coverage` project in docker.
 
 ## Prerequisites
 
@@ -16,18 +16,17 @@ All commands below must be executed while you have `cd`'d to this directory.
 ## Setting up for the first time
 
 ```sh
+# Dump the test mongo data.
 docker compose run --rm \
-  -v "$PWD/mongo-data-init:/mongo-data-init" \
+  -v "${PWD}/../mongo-data-mock:/mongo-data-mock" \
   mongo \
-  /mongo-data-init/initialize.sh
-
-docker compose build
+  /mongo-data-mock/initialize.sh
 ```
 
-## Running for dev
+## Running for development
 
 ```sh
-docker compose up -d
+docker compose up --build -d
 
 # Follow logs in order to infer when the containers are ready. (Docker cannot inform application logic readiness.)
 docker compose logs -f api
@@ -43,24 +42,16 @@ docker compose down
 ## Running the "release" versions of containers
 
 ```sh
-docker compose \
-  -f docker-compose.yaml \
-  -f docker-compose.override.release.yaml \
-  build
+docker compose -f docker-compose.yaml -f docker-compose.override.release.yaml \
+  up --build -d
 
-docker compose \
-  -f docker-compose.yaml \
-  -f docker-compose.override.release.yaml \
-  up -d
-
-# The workflow for dev is applicable here too (build, up, logs, down).
-# Until you bring down the containers, remember to specify the same yaml files in the same order: `docker compose -f <ditto> -f <ditto> <your_command ...>`.
+# The workflow for dev is applicable here too (up, logs, down).
+# Until you bring down the containers, remember to specify the same yaml files in the same order.
 ```
 
 ## Troubleshooting
 
-If stuck, try `down`, `build`, then `up`.
-1. `docker compose <...> down`
+If stuck, try `down` then `up`.
+1. `docker compose [...] down`
 1. `docker ps -a`. This lists all containers (exited or running). You might want to kill some or all of them. `docker rm <name or id of container>`.
-1. `docker compose <...> build`
-1. `docker compose <...> up -d`
+1. `docker compose [...] up --build -d`

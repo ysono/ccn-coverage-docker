@@ -1,0 +1,35 @@
+# A docker compose configuration for development.
+# To be selected as `-f docker-compose.yaml -f docker-compose.override.yaml`. The `docker compose` command automatically selects this sequence of config yamls.
+
+services:
+  api:
+    build:
+      context: ../../ccn-coverage-api
+      target: dev-stage
+      tags: ['local-connectivity-lab/ccn-coverage-api:dev']
+    volumes:
+      - ../../ccn-coverage-api:/code
+      - api-node_modules:/code/node_modules
+    working_dir: /code
+    # environment:
+    #   - NODE_ENV: 'development'
+    command: ['npm', 'start']
+      # --inspect=0.0.0.0:9229
+
+  vis:
+    build:
+      context: ../../ccn-coverage-vis
+      target: dev-stage
+      tags: ['local-connectivity-lab/ccn-coverage-vis:dev']
+    volumes:
+      - ../../ccn-coverage-vis:/code
+      - vis-node_modules:/code/node_modules
+    working_dir: /code
+    # environment:
+    #   - NODE_ENV: 'development'
+    command: ['npm', 'start']
+
+volumes:
+  api-node_modules:
+
+  vis-node_modules:
